@@ -408,5 +408,3 @@ int Informar (Passenger lista[], int len){
 
 	return retorno;
 }
-
-
