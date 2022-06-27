@@ -25,16 +25,16 @@ Para la realización de este programa, se utilizará una biblioteca llamada “Array
 facilitará el manejo de la lista de pasajeros y su modificación. En la sección siguiente se
 detallan las funciones que esta biblioteca debe tener.
 
-struct
-{
-int id;
-char name[51];
-char lastName[51];
-float price;
-char flycode[10];
-int typePassenger;
-int isEmpty;
-}typedef Passenger
+typedef struct{
+	int id;
+	char name[51];
+	char lastName[51];
+	float price;
+	char flycode[10];
+	int typePassenger;
+	int isEmpty;
+	int statusFlight;
+}Passenger;
 */
 
 /*Usar una variable que incremente para los id
@@ -70,6 +70,7 @@ int main(void) {
 	int retornoMod;
 	int retornoBaja;
 	int retornoInforme;
+	int retornoCargaForzada;
 
 	initPassengers(pasajeros, TAM);
 
@@ -82,11 +83,13 @@ int main(void) {
 		printf ("2)Modificar\n");
 		printf ("3)Baja\n");
 		printf ("4)Informar\n");
+		printf ("5)Carga forzada de datos\n");
+		printf ("6)Salir\n");
 
-		opcion = PedirEntero ("Seleccione una opcion (1/2/3/4): ", 1,4 );
-		while(opcion > 1 && contador == 0){
+		opcion = PedirEntero ("Seleccione una opcion (1/2/3/4/5): ", 1, 6);
+		while((opcion > 1 && opcion < 5) && contador == 0){
 			printf ("Primero debe ingresar un pasajero (opcion 1)\n");
-			opcion = PedirEntero ("Seleccione una opcion: ", 1,4 );
+			opcion = PedirEntero ("Seleccione una opcion: ", 1, 6);
 		}
 
 		switch(opcion){
@@ -101,14 +104,16 @@ int main(void) {
 			break;
 
 		case 2:
-			retornoMod = ModificarDatos (pasajeros, TAM, tipoPasajero, TIPOPASAJERO);
+			//int ModificarDatos (Passenger lista[], int tam, TypePassenger lista2[], int tam2, StatusFlight estadosVuelo[], int tam3)
+			retornoMod = ModificarDatos (pasajeros, TAM, tipoPasajero, TIPOPASAJERO, estadosVuelo, STATUSFLIGHT);
 			if (retornoMod == 1){
 				printf ("-Modificacion realizada-\n");
 			}
 			break;
 
 		case 3:
-			printPassenger(pasajeros, TAM);
+			//int printPassenger(Passenger list[], int length, StatusFlight estadosVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2)
+			printPassenger(pasajeros, TAM, estadosVuelo, STATUSFLIGHT, tipoPasajero, TIPOPASAJERO);
 			idBaja = PedirEntero ("Ingrese el id del pasajero a dar de baja: \n", 1, 2000);
 			retornoBaja = removePassenger(pasajeros, TAM, idBaja);
 			if (retornoBaja == 0){
@@ -118,12 +123,23 @@ int main(void) {
 			break;
 
 		case 4:
-			retornoInforme = Informar(pasajeros, TAM);
+			//int Informar (Passenger lista[], int len, StatusFlight estadosVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2){
+
+			retornoInforme = Informar(pasajeros, TAM, estadosVuelo, STATUSFLIGHT, tipoPasajero, TIPOPASAJERO);
 			if(retornoInforme == 0){
 				printf("-Error al informar-\n");
 			}
+			break;
+
+		case 5:
+			//int CargaForzada(StatusFlight estadosVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2){
+			retornoCargaForzada = CargaForzada( estadosVuelo, STATUSFLIGHT, tipoPasajero, TIPOPASAJERO);
+			if(retornoCargaForzada == 0){
+				printf("-Error en carga forzada-\n");
+			}
+			break;
 		}
-	}while(opcion != 5);
+	}while(opcion != 6);
 
 	return EXIT_SUCCESS;
 

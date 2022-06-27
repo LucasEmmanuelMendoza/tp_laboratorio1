@@ -1,39 +1,40 @@
 #include "biblioteca.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-/// @fn int IngresarEntero(char[], int, int) Pide el ingreso de un entero validado en un rango
-/// @param mensaje
-/// @param min
-/// @param max
-/// @return retorna el entero
-int IngresarEntero (char mensaje[], int min, int max){
-	int retorno;
+int Opcion (int bandera1, int bandera2, int bandera3, double kmIngresados, float precioAerolineas, float precioLatam){
+	int opcion;
+	int continuar;
+
+	continuar = 0;
 
 	do{
-	printf ("%s", mensaje);
-	fflush(stdin);
-	scanf ("%d", &retorno);
-	}while(retorno < min || retorno > max);
+		printf ("\nMenú de opciones:\n");
+		printf("1)Ingresar kilometros: (km: %.2f)\n", kmIngresados);
+		printf("2)Ingresar precio de vuelos:(Aerolineas: %.2f, Latam: %.2f)\n", precioLatam, precioAerolineas);
+		printf("3)Calcular todos los costos\n");
+		printf("4)Informar Resultados\n");
+		printf("5)Carga forzada de datos\n");
+		printf("6)Salir\n");
 
-	return retorno;
+	opcion = PedirEntero ("Seleccione una opcion: \n", 1, 6);
+
+	if(opcion == 3 && bandera1 == 0){
+		printf("Primero debe ingresar los km (Opcion 1)\n");
+	    }else{
+	    	if(opcion == 3 && bandera2 == 0){
+			    printf("Primero debe ingresar los precios de las aerolineas (Opcion 2)\n");
+		    }else{
+			    if(opcion == 4 && bandera3 == 0){
+			    	printf("Primero debe realizar los calculos (Opcion 3)\n");
+			    }else{
+				    continuar = 1;
+			    }
+		    }
+	    }
+	}while(continuar == 0);
+
+	return opcion;
 }
 
-/// @fn float IngresarFlotante(char[]) Pide el ingreso un flotante validando que sea mayor a cero
-/// @param mensaje
-/// @return retorna el flotante
-float IngresarFlotante (char mensaje[]){ //agregar validaciones
-	float retorno;
-
-	do{
-		printf ("%s", mensaje);
-		fflush(stdin);
-		scanf ("%f", &retorno);
-	}while (retorno <0);
-
-	return retorno;
-}
 
 /// @fn float CalcularPrecioDebito(float) Calcula un precio con 10% de descuento
 /// @param monto
@@ -59,6 +60,7 @@ float CalcularPrecioCredito (float monto){
 	return retorno;
 }
 
+/*
 /// @fn float CalcularEnBitcoin(float, double) Calcular la conversión a bitcoin de un monto ingresado
 /// @param monto
 /// @param bitcoinActual
@@ -71,11 +73,23 @@ float CalcularPrecioCredito (float monto){
 float CalcularEnBitcoin (float monto, double bitcoinActual){
 	float retorno;
 
-	retorno = (float) monto / bitcoinActual;
+	if(bitcoinActual != 0){
+		retorno = (float) monto / bitcoinActual;
+	}
+
+	return retorno;
+}*/
+
+float CalcularUnitario (float monto, double valor){
+	float retorno;
+
+	if(valor != 0){
+		retorno = (float) monto / valor;
+	}
 
 	return retorno;
 }
-
+/*
 /// @fn float CalcularPrecioPorKm(float, float) Calcula el precio por kilómetro de un viaje
 /// @param precioTotal
 /// @param kmTotales
@@ -84,10 +98,12 @@ float CalcularEnBitcoin (float monto, double bitcoinActual){
 float CalcularPrecioPorKm (float precioTotal, float kmTotales){
 	float retorno;
 
-	retorno = precioTotal / kmTotales;
+	if(kmTotales != 0){
+		retorno = precioTotal / kmTotales;
+	}
 
 	return retorno;
-}
+}*/
 
 /// @fn float CalcularDiferencia(float, float) Calcula la diferencia entre dos números en módulo
 /// @param precio1
@@ -127,25 +143,33 @@ void CargaForzada (float km, float aerolineas, float latam, double bitcoinActual
 
 	precioAerolineasCredito = CalcularPrecioCredito(aerolineas);
 	precioAerolineasDebito = CalcularPrecioDebito(aerolineas);
-	precioAerolineasBitcoin = CalcularEnBitcoin(aerolineas, bitcoinActual);
-	precioAerolineasUnitario = CalcularPrecioPorKm(aerolineas, km);
+	precioAerolineasBitcoin = CalcularUnitario(aerolineas, bitcoinActual);
+	precioAerolineasUnitario = CalcularUnitario(aerolineas, km);
 
 	precioLatamCredito = CalcularPrecioCredito (latam);
 	precioLatamDebito = CalcularPrecioDebito(latam);
-	precioLatamBitcoin = CalcularEnBitcoin(latam, bitcoinActual);
-	precioLatamUnitario = CalcularPrecioPorKm(latam, km);
+	precioLatamBitcoin = CalcularUnitario(latam, bitcoinActual);
+	precioLatamUnitario = CalcularUnitario(latam, km);
 
 	diferenciaDePrecios = CalcularDiferencia(latam, aerolineas);
 
-	printf ("Latam:\na) Precio con tarjeta de débito: %.2f\n", precioLatamDebito);
+	ImprimirResultados(aerolineas, latam, km, precioLatamDebito, precioLatamCredito, precioLatamBitcoin, precioLatamUnitario, precioAerolineasDebito, precioAerolineasCredito, precioAerolineasBitcoin, precioAerolineasUnitario, diferenciaDePrecios);
+}
+
+void ImprimirResultados (float precioAerolineas, float precioLatam, double km, float precioLatamDebito, float precioLatamCredito, float precioLatamBitcoin, float precioLatamUnitario, float precioAerolineasDebito, float precioAerolineasCredito, float precioAerolineasBitcoin, float precioAerolineasUnitario, float diferenciaDePrecios){
+	printf ("Km ingresados: %f\n", km);
+
+	printf ("Precio Latam: %f\n", precioLatam);
+	printf ("a) Precio con tarjeta de débito: %.2f\n", precioLatamDebito);
 	printf ("b) Precio con tarjeta de crédito: %.2f\n", precioLatamCredito);
 	printf ("c) Precio pagando con bitcoin : %.2f\n", precioLatamBitcoin);
 	printf ("d) Precio unitario: %.2f\n", precioLatamUnitario);
-	printf ("\nAerolíneas: \na) Precio con tarjeta de débito: %.2f \n", precioAerolineasDebito );
+
+	printf ("Precio Aerolineas: %f\n", precioAerolineas);
+	printf ("a) Precio con tarjeta de débito: %.2f \n", precioAerolineasDebito );
 	printf ("b) Precio con tarjeta de crédito: %.2f \n", precioAerolineasCredito);
 	printf ("c) Precio pagando con bitcoin : %.2f \n", precioAerolineasBitcoin);
 	printf ("d) Precio unitario: %.2f \n", precioAerolineasUnitario);
+
 	printf ("La diferencia de precio es: %.2f\n", diferenciaDePrecios);
 }
-
-

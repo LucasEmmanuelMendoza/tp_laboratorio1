@@ -22,28 +22,58 @@ void initPassengers (Passenger lista[], int tam){
 	}
 }
 
-void ImprimirUnPasajero (Passenger pasajero){
 
-	printf("%4d | %6s | %6s | %8f | %8s | %10d | %12d\n", pasajero.id, pasajero.name, pasajero.lastName, pasajero.price, pasajero.flycode, pasajero.typePassenger, pasajero.statusFlight);
 
+//int Informar (Passenger lista[], int len, StatusFlight estadosVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2){
+
+int CargaForzada(StatusFlight estadosVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2){
+	int retorno;
+	retorno = 0;
+
+	//------------Carga Forzada-------------------------------------------------------
+	Passenger pasajerosCForzada[5]={ {1, "Lucas", "Mendoza", 165000, "fly001", 3, 0, 1},
+									 	{2, "Carlos", "Gomez", 276000, "fly002", 1, 0, 1},
+										{3, "Juan Ignacio", "Perez", 123000, "fly003", 2, 0, 2},
+										{4, "Carla", "Sanchez", 450000, "fly004", 1, 0, 1},
+										{5, "Ramon", "Lopez", 200000, "fly005", 2, 0, 2}};
+	//--------------------------------------------------------------------------------
+
+	Informar(pasajerosCForzada, 5, estadosVuelo, tam1, tiposPasajero, tam2);
+
+	return retorno;
 }
+void ImprimirUnPasajero (Passenger pasajero, StatusFlight estadosVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2){
 
-int printPassenger(Passenger list[], int length)
+	for(int i=0; i<tam1; i++){
+		if(pasajero.statusFlight == estadosVuelo[i].id){
+			for(int j=0; j<tam2; j++){
+				if(pasajero.typePassenger == tiposPasajero[j].id){
+					printf("%4d | %20s | %20s | %13.2f | %15s | %18s | %18s\n", pasajero.id, pasajero.name, pasajero.lastName, pasajero.price, pasajero.flycode, tiposPasajero[j].descripcion, estadosVuelo[i].descripcion);
+				}
+			}
+		}
+	}
+}
+int printPassenger(Passenger list[], int length, StatusFlight estadosVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2)
 {
 	int retorno;
 	retorno = -1;
 
 	printf ("Lista de pasajeros: \n");
 
+	printf("-------------------------------------------------------------------------------------------------------------------------------\n");
 	if (list != NULL && length >0){
-		printf ("%4s | %6s | %6s | %8s | %8s | %10s | %12s\n", "id", "Name", "Last Name", "Price", "Fly Code", "Type Passenger", "Status Flight");
+		printf ("%4s | %20s | %20s | %13s | %15s | %18s | %18s\n", "id", "Name", "Last Name", "Price", "Fly Code", "Type Passenger", "Status Flight");
+		printf("-------------------------------------------------------------------------------------------------------------------------------\n");
+
 		for(int i=0; i<length; i++){
 			if (list[i].isEmpty == 0){
-				ImprimirUnPasajero (list[i]);
+				ImprimirUnPasajero (list[i], estadosVuelo, tam1, tiposPasajero, tam2);
 				retorno = 0;
 			}
 		}
 	}
+	printf("-------------------------------------------------------------------------------------------------------------------------------\n");
 
 	return retorno;
 }
@@ -54,9 +84,7 @@ int addPassenger (Passenger* list, int len, int id, char name[], char lastName[]
 
 	retorno = -1;
 
-	printf("HOLAAAAA\n");
-		if (len >0){
-			printf("HOLAAAAA");
+		if (len > 0 && id > 0 && name != NULL && lastName != NULL && price >0){
 			for (int i = 0; i<len; i++){
 					if (list[i].isEmpty == 1){
 						list[i].id = id;
@@ -83,7 +111,7 @@ int PedirPasajero (char name[], char lastName[], char flycode[], float* precio, 
 	if (name!=NULL && lastName != NULL && flycode != NULL){
 		PedirCadena("Ingrese el nombre: \n", name);
 		PedirCadena("Ingrese el apellido: \n", lastName);
-		PedirCadena("Ingrese el codigo de vuelo: \n", flycode);
+		PedirCadenaConNumeros("Ingrese el codigo de vuelo: \n", flycode);
 		*precio = PedirFlotante("Ingrese el precio del vuelo: ");
 
 		ImprimirTiposPasajero (lista, tam);
@@ -97,7 +125,9 @@ int PedirPasajero (char name[], char lastName[], char flycode[], float* precio, 
 }
 	//agregar if(cantidadDatos > 0). Esto se agrega en el main con el contador
 
-int ModificarDatos (Passenger lista[], int tam, TypePassenger lista2[], int tam2){
+//int printPassenger(Passenger list[], int length, StatusFlight estadosVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2)
+
+int ModificarDatos (Passenger lista[], int tam, TypePassenger lista2[], int tam2, StatusFlight estadosVuelo[], int tam3){
 	int retorno;
 	int idMod;
 	int opcionMod;
@@ -108,7 +138,7 @@ int ModificarDatos (Passenger lista[], int tam, TypePassenger lista2[], int tam2
 
 	if (lista != NULL && lista2 != NULL && tam > 0 && tam2 > 0 ){
 
-		retornoInforme = printPassenger(lista, tam);
+		retornoInforme = printPassenger(lista, tam, estadosVuelo, tam3, lista2, tam2);
 		if (retornoInforme == -1){
 			printf ("Error al mostrar pasajeros\n");
 		}
@@ -148,7 +178,7 @@ int ModificarDatos (Passenger lista[], int tam, TypePassenger lista2[], int tam2
 					break;
 
 				case 5:
-					PedirCadena("Ingrese el nuevo codigo de vuelo: \n", lista[index].flycode);
+					PedirCadenaConNumeros("Ingrese el nuevo codigo de vuelo: \n", lista[index].flycode);
 					break;
 					}
 				}while (opcionMod!= 6);
@@ -322,19 +352,25 @@ int sortPassengersByCode(Passenger list[], int len, int order){
 	return retorno;
 }
 
-int ImprimirActivos (Passenger lista[], int len){
+//ImprimirUnPasajero (list[i], estadosVuelo, tam1, tiposPasajero, tam2);
+//int printPassenger(Passenger list[], int length, StatusFlight estadosVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2);
+
+int ImprimirActivos (Passenger lista[], int len, StatusFlight estadosVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2){
 	int retorno;
 	retorno = -1;
-	printf ("%4s | %6s | %6s | %8s | %8s | %10s | %12s\n", "id", "Name", "Last Name", "Price", "Fly Code", "Type Passenger", "Status Flight");
-
+	printf("-------------------------------------------------------------------------------------------------------------------------------\n");
+	printf ("%4s | %20s | %20s | %13s | %15s | %18s | %18s\n", "id", "Name", "Last Name", "Price", "Fly Code", "Type Passenger", "Status Flight");
+	printf("-------------------------------------------------------------------------------------------------------------------------------\n");
 	sortPassengersByCode(lista, len, 1);
 
 	for(int i=0; i<len; i++){
 		if(lista[i].statusFlight == 1){
-			ImprimirUnPasajero(lista[i]);
+			ImprimirUnPasajero(lista[i], estadosVuelo, tam1, tiposPasajero, tam2);
 			retorno = 0;
 		}
 	}
+	printf("-------------------------------------------------------------------------------------------------------------------------------\n");
+
 	return retorno;
 }
 
@@ -368,14 +404,16 @@ int MostrarTotalYPromedioDePrecios (Passenger lista[], int len){
 		}
 	}
 
-	printf("El total de los precios de los pasajes es: %.2f\n", sumaPrecios);
-	printf("El promedio de los precios de los pasajes es: %.2f\n", promedio);
-	printf("%d pasajeros superan el promedio de los precios de los pasajes\n", cantSuperanPromedio);
+	printf("-----------------------------------------------------------------\n");
+	printf(" El total de los precios de los pasajes es: %.2f\n", sumaPrecios);
+	printf(" El promedio de los precios de los pasajes es: %.2f\n", promedio);
+	printf(" %d pasajeros superan el promedio de los precios de los pasajes\n", cantSuperanPromedio);
+	printf("-----------------------------------------------------------------\n\n");
 
 	return retorno;
 }
 
-int Informar (Passenger lista[], int len){
+int Informar (Passenger lista[], int len, StatusFlight estadosVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2){
 	int opcion;
 	int retorno;
 
@@ -392,7 +430,7 @@ int Informar (Passenger lista[], int len){
 		switch(opcion){
 		case 1:
 			sortPassengers(lista, len, 1);
-			printPassenger(lista, len);
+			printPassenger(lista, len, estadosVuelo, tam1, tiposPasajero, tam2);
 			break;
 
 		case 2:
@@ -400,7 +438,7 @@ int Informar (Passenger lista[], int len){
 			break;
 
 		case 3:
-			ImprimirActivos(lista, len);
+			ImprimirActivos(lista, len, estadosVuelo, tam1, tiposPasajero, tam2);
 			break;
 		}
 		retorno = 1;
