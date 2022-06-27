@@ -47,6 +47,7 @@ int main()
                 flag1 = 1;
                 break;
             case 2:
+            	controller_loadFromBinary("data.bin", listaPasajeros, estadosVuelo, ESTADOSVUELO,tiposPasajero, TIPOSPASAJERO);
             	flag2 = 1;
             	break;
             case 3:
@@ -68,7 +69,7 @@ int main()
             	controller_saveAsText("data.csv",listaPasajeros, estadosVuelo, ESTADOSVUELO, tiposPasajero, TIPOSPASAJERO);
             	break;
             case 9:
-            	//controller_saveAsBinary();
+            	controller_saveAsBinary("data.bin", listaPasajeros, estadosVuelo, ESTADOSVUELO, tiposPasajero, TIPOSPASAJERO);
             	break;
         }
     }while(option != 10);
