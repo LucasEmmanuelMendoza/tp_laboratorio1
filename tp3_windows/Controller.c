@@ -21,7 +21,7 @@ int controller_loadFromText(char* path , LinkedList* pArrayListPassenger, Status
 
 		retornoParser = parser_PassengerFromText(pArchivo, pArrayListPassenger, estadosDeVuelo, tam1, tiposPasajero, tam2);
 
-		if (retornoParser == 0){
+		if (retornoParser == 1){
 			retorno = 0;
 		}
 	}
@@ -251,17 +251,20 @@ int controller_ListPassenger(LinkedList* pArrayListPassenger, StatusFlight estad
 
 	retorno = -1;
 
-		pasajero = Passenger_new();
+	printf("%4s - %15s - %15s - %7s - %15s - %15s - %s20\n", "Id", "Nombre", "Apellido", "Precio", "Codigo de Vuelo", "Estado de Vuelo", "Tipo de Pasajero");
+
+	//pasajero = Passenger_new();
 		if(pArrayListPassenger != NULL){
 			tam = ll_len(pArrayListPassenger);
 			for(int i=0; i<tam; i++){
+				pasajero = Passenger_new();
 				pasajero = ll_get(pArrayListPassenger, i);
 				PrintOnePassenger(pasajero, estadosDeVuelo, tam1, tiposPasajero, tam2);
 			}
 			retorno = 0;
 		}
 
-    return retorno;
+	return retorno;
 }
 
 /** \brief Ordenar pasajeros

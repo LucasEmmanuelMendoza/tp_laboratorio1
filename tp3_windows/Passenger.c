@@ -198,14 +198,29 @@ Passenger* Passenger_new(){
 	return pasajero;
 }
 
-Passenger* Passenger_newParametros(char* idStr, char* nombreStr, char* apellidoStr, char* precioStr, char* tipoPasajeroStr, char* codigoVueloStr, char* estadoDeVueloStr, StatusFlight estadosDeVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2){
+Passenger* Passenger_newParametros(char* idStr, char* nombreStr, char* apellidoStr, char* precioStr, char* codigoVueloStr, char* tipoPasajeroStr, char* estadoDeVueloStr, StatusFlight estadosDeVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2){
 	Passenger* pasajero;
 
 	int auxTipoPasajero;
 	int auxEstadoDeVuelo;
 	int i;
+	int j;
 
 	pasajero = Passenger_new();
+
+	for(j=0; j<tam2; j++){
+		if(strcmp(tiposPasajero[j].descripcion, tipoPasajeroStr)==0){
+			auxTipoPasajero = tiposPasajero[j].id;
+			break;
+		}
+	}
+
+	for(i=0; i<tam1; i++){
+		if(strcmp(estadosDeVuelo[i].descripcion, estadoDeVueloStr)==0){
+			auxEstadoDeVuelo = estadosDeVuelo[i].id;
+			break;
+		}
+	}
 
 	if(pasajero != NULL){
 		Passenger_setId(pasajero, atoi(idStr));
@@ -213,23 +228,10 @@ Passenger* Passenger_newParametros(char* idStr, char* nombreStr, char* apellidoS
 		Passenger_setApellido(pasajero, apellidoStr);
 		Passenger_setPrecio(pasajero, atof(precioStr));
 		Passenger_setCodigoVuelo(pasajero, codigoVueloStr);
-
-		for(i=0; i<tam2; i++){
-			if(strcmp(tiposPasajero[i].descripcion, tipoPasajeroStr)==0){
-				auxTipoPasajero = tiposPasajero[i].id;
-				break;
-			}
-		}
 		Passenger_setTipoPasajero(pasajero, auxTipoPasajero);
-
-		for(i=0; i<tam1; i++){
-			if(strcmp(estadosDeVuelo[i].descripcion, estadoDeVueloStr)==0){
-				auxEstadoDeVuelo = estadosDeVuelo[i].id;
-				break;
-			}
-		}
 		Passenger_setEstadoDeVuelo(pasajero, auxEstadoDeVuelo);
 	}
+
 	return pasajero;
 }
 
@@ -241,7 +243,7 @@ void PrintOnePassenger (Passenger* pasajero, StatusFlight estadosDeVuelo[], int 
 	char nombre[50];
 	char apellido[50];
 	float precio;
-	char codigoVuelo[4];
+	char codigoVuelo[10];
 	int estadoDeVuelo;
 	int tipoPasajero;
 
@@ -257,7 +259,7 @@ void PrintOnePassenger (Passenger* pasajero, StatusFlight estadosDeVuelo[], int 
 						Passenger_getApellido(pasajero, apellido);
 						Passenger_getPrecio(pasajero, &precio);
 						Passenger_getCodigoVuelo(pasajero, codigoVuelo);
-						printf("%d - %s - %s - %f - %s - %s - %s\n", id, nombre, apellido, precio, codigoVuelo, estadosDeVuelo[i].descripcion, tiposPasajero[j].descripcion);
+						printf("%4d - %15s - %15s - %7.2f - %15s - %15s - %20s\n", id, nombre, apellido, precio, codigoVuelo,tiposPasajero[j].descripcion, estadosDeVuelo[i].descripcion);
 					}
 				}
 			}
@@ -265,41 +267,17 @@ void PrintOnePassenger (Passenger* pasajero, StatusFlight estadosDeVuelo[], int 
 	}
 }
 
-/*void PrintPassengers(LinkedList* this, StatusFlight estadosDeVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2){
-	Passenger* pasajero;
-	int tam;
-
-	pasajero = Passenger_new();
-	if(this != NULL){
-		tam = ll_len(this);
-		for(int i=0; i<tam; i++){
-			pasajero = ll_get(this, i);
-			PrintOnePassenger(pasajero, estadosDeVuelo, tam1, tiposPasajero, tam2);
-		}
-	}
-}
-
-void PrintPassengers(Passenger* pasajeros[], int tam, StatusFlight estadosDeVuelo[], int tam1, TypePassenger tiposPasajero[], int tam2){
-	int i;
-
-	printf("%s - %s - %s - %s - %s - %s - %s\n", "Id", "Nombre", "Apellido", "Precio", "Codigo De Vuelo", "Estado De Vuelo", "Tipo de pasajero");
-
-	for(i=0; i<tam; i++){
-		PrintOnePassenger(pasajeros[i], estadosDeVuelo, tam1, tiposPasajero, tam2);
-	}
-}*/
-
 void PrintEstadosVuelo(StatusFlight estadosDeVuelo[], int tam1){
 	printf("%s - %s \n", "Id", "Descripcion");
 		for(int i=0; i<tam1; i++){
-			printf("%d - %s\n", estadosDeVuelo->id, estadosDeVuelo->descripcion);
+			printf("%d - %s\n", estadosDeVuelo[i].id, estadosDeVuelo[i].descripcion);
 		}
 }
 
 void PrintTiposPasajero(TypePassenger tiposPasajero[], int tam2){
 	printf("%s - %s \n", "Id", "Descripcion");
 	for(int i=0; i<tam2; i++){
-		printf("%d - %s\n", tiposPasajero->id, tiposPasajero->descripcion);
+		printf("%d - %s\n", tiposPasajero[i].id, tiposPasajero[i].descripcion);
 	}
 }
 

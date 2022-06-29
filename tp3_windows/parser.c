@@ -11,35 +11,33 @@ int parser_PassengerFromText(FILE* pFile , LinkedList* pArrayListPassenger, Stat
 {
 	Passenger* pasajero;
 	int retorno;
-	char auxId[10];
-	char auxName[30];
-	char auxLastName[30];
-	char auxPrice[10];
-	char auxFlyCode[10];
-	char auxTypePassenger[15];
-	char auxStatusFlight[20];
+
+	char buffer[7][128];
+
 	int retornoAdd;
 	FILE* ultimoId;
 
 	retorno = -1;
 
-	fscanf(pFile, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]", auxId, auxName, auxLastName, auxPrice, auxFlyCode, auxTypePassenger, auxStatusFlight);
+	fscanf(pFile, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]", buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6]);
 
-	while(!feof(pFile)){
-		fscanf(pFile, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]", auxId, auxName, auxLastName, auxPrice, auxFlyCode, auxTypePassenger, auxStatusFlight);
+	do{
+		fscanf(pFile, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]", buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6]);
 
-		pasajero = Passenger_newParametros(auxId, auxName, auxLastName, auxPrice, auxFlyCode, auxTypePassenger, auxStatusFlight, estadosDeVuelo, tam1, tiposPasajero, tam2);
+		pasajero = Passenger_newParametros(buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], estadosDeVuelo, tam1, tiposPasajero, tam2);
 
 		retornoAdd = ll_add(pArrayListPassenger, pasajero);
 
 		if(retornoAdd == 0){
 			retorno = 1;
 		}
+		//printf("%s %s %s %s\n", buffer[0], buffer[1], buffer[2], buffer[3]);
 
 		ultimoId = fopen("ultimoId.txt", "w");
-		fprintf(ultimoId, "%s", auxId);
+		fprintf(ultimoId, "%s", buffer[0]);
 		fclose(ultimoId);
-	}
+
+	}while(!feof(pFile));
 
 	return retorno;
 }

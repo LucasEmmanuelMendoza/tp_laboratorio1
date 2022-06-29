@@ -31,7 +31,7 @@ typedef struct
 	char apellido[50];
 	float precio;
 	int tipoPasajero;
-	char codigoVuelo[4];
+	char codigoVuelo[7];
 	int estadoDeVuelo;
 }Passenger;
 
@@ -41,7 +41,7 @@ typedef struct
 	char apellido[50];
 	float precio;
 	char tipoPasajero[50];
-	char codigoVuelo[4];
+	char codigoVuelo[7];
 	char estadoDeVuelo[50];
 }PassengerBinary;
 

@@ -16,7 +16,13 @@
      8. Guardar los datos de los pasajeros en el archivo data.csv (modo texto).
      9. Guardar los datos de los pasajeros en el archivo data.csv (modo binario).
     10. Salir
+
+    CORRECIONES: El case 1 no levanta la lista del archivo .csv y el case 9 esta mal, la funcion
+vino comentada y esta mal llamada... con respecto al case 1, si no es el
+controller del case 1 que falla es el controler del case 6 porque no hay forma
+aparente para que imprima la lista por pantalla
 *****************************************************/
+
 #define ESTADOSVUELO 4
 #define TIPOSPASAJERO 3
 #define MAXOPTION 10
@@ -35,7 +41,6 @@ int main()
     TypePassenger tiposPasajero[TIPOSPASAJERO] = {{1, "EconomyClass"}, {2, "FirstClass"}, {3, "ExecutiveClass"}};
 
     LinkedList* listaPasajeros = ll_newLinkedList();
-
 
     do{
     	option = Menu(flag1, flag2, MAXOPTION);
